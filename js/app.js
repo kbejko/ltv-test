@@ -69,3 +69,16 @@ $(document).ready(function () {
   });
 
 });
+
+let main = document.querySelector(".main")
+let loader = document.querySelector(".loader")
+
+document.onreadystatechange = function() {
+    if (document.readyState !== "complete") {
+      main.style.display = "none";
+      loader.style.visibility = "visible";
+    } else {
+      loader.style.display = "none";
+      main.style.display = "block";
+    }
+};

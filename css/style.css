@@ -409,3 +409,47 @@ section {
   content: '|';
   padding-left: 5px;
 }
+
+/* ************************************************************
+***************************************************************
+--- Loader ---
+***************************************************************
+************************************************************ */
+
+.loader {
+  min-height: calc(100vh - 86px - 72px);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.loader .spinner {
+  width: 154px;
+  height: 154px;
+  border: 0.5rem solid #f6bc25;
+  border-radius: 50%;
+  position: relative;
+  animation: spin 1s linear infinite;
+}
+.loader .spinner:after {
+  content: '';
+  display: inline-block;
+  background: #fff;
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  top: 40%;
+  left: 95%;
+}
+.loader p {
+  font-size: 1.5rem;
+  margin-top: 27px;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
