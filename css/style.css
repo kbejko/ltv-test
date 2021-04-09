@@ -184,6 +184,11 @@ section {
   .input-group > .form-control {
     height: 50px;
   }
+  /* it seems initial and unset also work without needing to override bottom value but not 100% browser support */
+  .input-group.error .error-msg {
+    position: relative;
+    bottom: 0;
+  }
   .btn-form-submit {
     margin: 12px 0 0 0;
   }
