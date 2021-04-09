@@ -23,7 +23,8 @@
     </nav>
 
     <section class="loader">
-      <img src="img/loading_spinner.svg" alt="loading spinner" width="154" height="154">
+      <!-- <img src="img/loading_spinner.svg" alt="loading spinner" width="154" height="154"> -->
+      <div class="spinner"></div>
       <p>Please wait a moment...</p>
     </section>
 
@@ -36,6 +37,15 @@
           </div>
           
           <form>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <p class="text-uppercase form-overtext">Type of Search:</p>
+              <label class="btn btn-secondary text-uppercase active">
+                <input type="radio" name="options" id="email" autocomplete="off" checked> Email Address
+              </label>
+              <label class="btn btn-secondary text-uppercase">
+                <input type="radio" name="options" id="phone" autocomplete="off"> Phone Number
+              </label>
+            </div>
             <div class="input-group">
               <input class="form-control" type="text" name="email" placeholder="Enter an Email Address" />
               <p class="error-msg">Please enter a valid email address</p>
