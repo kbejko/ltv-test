@@ -1,121 +1,73 @@
-$(document).ready(function () {
+//rewrote to remove jQuery
 
-  
-  let phoneOpt = document.getElementById("phoneOpt")
-  let radios = document.querySelectorAll('input[type="radio"]')
-  let inputVal = document.querySelectorAll('input[type="text"]')[0]
-  // note: remove any dashes
-  let phoneRegex = /^\d+$/
-  let emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+const searchBtn = document.querySelector('#btn-search')
+const optionBtns = document.querySelectorAll('input[name="options"]')
+const emailOpt = document.querySelector('#emailOpt')
+const phoneOpt = document.querySelector('#phoneOpt')
+const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+const loader = `<section class="loader"><div class="spinner"></div><p>Please wait a moment...</p></section>`
+const main = document.querySelector('.main')
+let input = document.querySelector('input[type="text"]')
+let errorMsg = "Please enter a valid email address"
 
-  for (let i = 0; i < radios.length; i++) {
-    radios[i].onchange = function() {
-      inputVal.value = ''
-      if (phoneOpt.checked === true) {
-        inputVal.placeholder = 'ENTER A PHONE NUMBER'
-      } else {
-        inputVal.placeholder = 'ENTER AN EMAIL ADDRESS'
-      }
-    }
+window.onload = function() {
+  input.value = ''
+}
+
+//switches between phone and email
+phoneOpt.onchange = function() {
+  input.value = ''
+  input.parentNode.classList.remove('error')
+  input.placeholder = 'ENTER A PHONE NUMBER'
+  errorMsg = "Please enter a valid phone number"
+}
+emailOpt.onchange = function() {
+  input.value = ''
+  input.parentNode.classList.remove('error')
+  input.placeholder = 'ENTER AN EMAIL ADDRESS'
+  errorMsg = "Please enter a valid email address"
+}
+
+//runs data fetch and sets content to local storage
+searchBtn.onclick = function(e) {
+  e.preventDefault()
+  localStorage.clear()
+
+  let inputVal = input.value
+  let runQuery
+  let runQueryWith
+
+  if (emailOpt.checked && inputVal.match(emailRegex)) {
+    runQuery = true
+    runQueryWith = "email=" + inputVal.toLowerCase()
+  } else if (phoneOpt.checked && inputVal.match(phoneRegex)) {
+    runQuery = true
+    runQueryWith = "phone=" + inputVal.replace(/\D/g,'')
+  } else {
+    runQuery = false
   }
 
+  if (runQuery) {
+    main.innerHTML = loader
+    const proxyurl = ''
+    const url = 'https://ltv-data-api.herokuapp.com/api/v1/records.json?' + runQueryWith
+    fetch(proxyurl + url)
+      .then((response) => response.text())
+      .then(function(contents) {
+        localStorage.setItem('userObject', contents)
+        window.location.href = 'result.html'
+      })
+      .catch((e) => console.log(e))
+  } else {
+    document.querySelector('.error-msg').innerHTML = errorMsg
+    input.parentNode.classList.add('error')
+  }
+}
 
-  
-
-  $("#btn-search").on("click", function (e) {
-    e.preventDefault();
-    localStorage.clear(); //Clears storage for next request
-
-    let email = inputVal.value.toLowerCase();
-    let phone = ''
-    let input = "email=" + email
-    if (phoneOpt.checked) {
-      phone = inputVal.value
-      input = "phone=" + phone
-    } else {
-      input = "email=" + inputVal.value
-    }
-
-    var x, y;
-    regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (email.match(regEx)) {
-      x = true;
-    } else {
-      x = false;
-    }
-    
-
-    if (x === true) {
-      document.querySelector('input[type="text"]').parentNode.classList.remove("error");
-      const proxyurl = "";
-      const url =
-        'https://ltv-data-api.herokuapp.com/api/v1/records.json?' + input;
-      fetch(proxyurl + url)
-        .then((response) => response.text())
-        .then(function (contents) {
-          localStorage.setItem("userObject", contents);
-          window.location.href = "result.html";
-        })
-        .catch((e) => console.log(e));
-    } else if (x !== true) {
-      document.querySelector('.error-msg').innerHTML = errorMsg
-      document.querySelector('input[type="text"]').parentNode.classList.add("error");
-    }
-  });
-
-
-  $('input[type="text"]').keypress(function (event) {
-    // email = $('input[type="text"]').val().toLowerCase();
-    // regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    // if (email.match(regEx)) {
-    //   x = true;
-    //   document.querySelector('input[type="text"]').parentNode.classList.remove("error");
-    // } else {
-    //   x = false;
-    // }
-    keycode = (event.keyCode ? event.keyCode : event.which);
-    if (keycode == '13') {
-      $("#btn-search").click()
-      /**
-       * Makes a request to ltv API to search an specific email address.
-       * If there's a response, it gets stored in the local storage and redirects to results page
-       */
-    //   event.preventDefault();
-    //   localStorage.clear(); //Clears storage for next request
-
-    //   var x, y;
-
-
-    //   if (x === true) {
-    //     const proxyurl = "";
-    //     const url =
-    //       'https://ltv-data-api.herokuapp.com/api/v1/records.json?email=' + email;
-    //     fetch(proxyurl + url)
-    //       .then((response) => response.text())
-    //       .then(function (contents) {
-    //         localStorage.setItem("userObject", contents);
-    //         window.location.href = "result.html";
-    //       })
-    //       .catch((e) => console.log(e));
-    //   } else if (x !== true) {
-    //     document.querySelector('input[type="text"]').parentNode.classList.add("error");
-    //   }
-    }
-  });
-
-  //loader functionality
-  let main = document.querySelector(".main")
-  let loader = document.querySelector(".loader")
-
-  document.onreadystatechange = function() {
-    if (document.readyState !== "complete") {
-      main.style.display = "none";
-      loader.style.visibility = "visible";
-    } else {
-      loader.style.display = "none";
-      main.style.display = "block";
-    }
-  };
-
-});
-
+//runs searchbutton click function on enter
+input.onkeypress = function (event) {
+  if (event.keyCode == '13') {
+    searchBtn.click()
+  }
+}
