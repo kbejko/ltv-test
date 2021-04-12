@@ -233,6 +233,9 @@ section {
   .form-overtext {
     display: none;
   }
+  .btn-group-toggle {
+    width: 100%;
+  }
   .btn-group > .btn-secondary {
     margin: 0;
     flex-grow: 1;
