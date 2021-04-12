@@ -8,3 +8,4 @@
 1. Rewrite result.js in vanilla js
 2. Rewrite custom css removing the need for bootstrap
 3. Testing
+4. Accessibility
