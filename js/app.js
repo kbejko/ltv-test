@@ -21,12 +21,16 @@ phoneOpt.onchange = function() {
   input.parentNode.classList.remove('error')
   input.placeholder = 'ENTER A PHONE NUMBER'
   errorMsg = "Please enter a valid phone number"
+  this.parentNode.classList.add('active')
+  emailOpt.parentNode.classList.remove('active')
 }
 emailOpt.onchange = function() {
   input.value = ''
   input.parentNode.classList.remove('error')
   input.placeholder = 'ENTER AN EMAIL ADDRESS'
   errorMsg = "Please enter a valid email address"
+  this.parentNode.classList.add('active')
+  phoneOpt.parentNode.classList.remove('active')
 }
 
 //runs data fetch and sets content to local storage
