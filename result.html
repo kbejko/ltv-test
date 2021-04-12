@@ -76,6 +76,15 @@
             <h2 class="mb-4 mb-md-5"><strong>Try Again</strong> - Make a new search</h2>
           </div>
           <form>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <p class="text-uppercase form-overtext">Type of Search:</p>
+              <label class="btn btn-secondary text-uppercase active">
+                <input type="radio" name="options" id="email" autocomplete="off" checked> Email Address
+              </label>
+              <label class="btn btn-secondary text-uppercase">
+                <input type="radio" name="options" id="phone" autocomplete="off"> Phone Number
+              </label>
+            </div>
             <div class="input-group">
               <input class="form-control" type="text" name="email" placeholder="Enter an Email Address" />
               <p class="error-msg">Please enter a valid email address</p>

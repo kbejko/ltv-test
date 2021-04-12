@@ -1,9 +1,40 @@
 $(document).ready(function () {
 
+  
+  let phoneOpt = document.getElementById("phoneOpt")
+  let radios = document.querySelectorAll('input[type="radio"]')
+  let inputVal = document.querySelectorAll('input[type="text"]')[0]
+  // note: remove any dashes
+  let phoneRegex = /^\d+$/
+  let emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+  for (let i = 0; i < radios.length; i++) {
+    radios[i].onchange = function() {
+      inputVal.value = ''
+      if (phoneOpt.checked === true) {
+        inputVal.placeholder = 'ENTER A PHONE NUMBER'
+      } else {
+        inputVal.placeholder = 'ENTER AN EMAIL ADDRESS'
+      }
+    }
+  }
+
+
+  
+
   $("#btn-search").on("click", function (e) {
     e.preventDefault();
     localStorage.clear(); //Clears storage for next request
-    email = $('input[type="text"]').val().toLowerCase();
+
+    let email = inputVal.value.toLowerCase();
+    let phone = ''
+    let input = "email=" + email
+    if (phoneOpt.checked) {
+      phone = inputVal.value
+      input = "phone=" + phone
+    } else {
+      input = "email=" + inputVal.value
+    }
 
     var x, y;
     regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -12,12 +43,13 @@ $(document).ready(function () {
     } else {
       x = false;
     }
+    
 
     if (x === true) {
       document.querySelector('input[type="text"]').parentNode.classList.remove("error");
       const proxyurl = "";
       const url =
-        'https://ltv-data-api.herokuapp.com/api/v1/records.json?email=' + email;
+        'https://ltv-data-api.herokuapp.com/api/v1/records.json?' + input;
       fetch(proxyurl + url)
         .then((response) => response.text())
         .then(function (contents) {
@@ -26,54 +58,56 @@ $(document).ready(function () {
         })
         .catch((e) => console.log(e));
     } else if (x !== true) {
+      document.querySelector('.error-msg').innerHTML = errorMsg
       document.querySelector('input[type="text"]').parentNode.classList.add("error");
     }
   });
 
+
   $('input[type="text"]').keypress(function (event) {
-    email = $('input[type="text"]').val().toLowerCase();
-    regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (email.match(regEx)) {
-      x = true;
-      document.querySelector('input[type="text"]').parentNode.classList.remove("error");
-    } else {
-      x = false;
-    }
+    // email = $('input[type="text"]').val().toLowerCase();
+    // regEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    // if (email.match(regEx)) {
+    //   x = true;
+    //   document.querySelector('input[type="text"]').parentNode.classList.remove("error");
+    // } else {
+    //   x = false;
+    // }
     keycode = (event.keyCode ? event.keyCode : event.which);
     if (keycode == '13') {
+      $("#btn-search").click()
       /**
        * Makes a request to ltv API to search an specific email address.
        * If there's a response, it gets stored in the local storage and redirects to results page
        */
-      event.preventDefault();
-      localStorage.clear(); //Clears storage for next request
+    //   event.preventDefault();
+    //   localStorage.clear(); //Clears storage for next request
 
-      var x, y;
+    //   var x, y;
 
 
-      if (x === true) {
-        const proxyurl = "";
-        const url =
-          'https://ltv-data-api.herokuapp.com/api/v1/records.json?email=' + email;
-        fetch(proxyurl + url)
-          .then((response) => response.text())
-          .then(function (contents) {
-            localStorage.setItem("userObject", contents);
-            window.location.href = "result.html";
-          })
-          .catch((e) => console.log(e));
-      } else if (x !== true) {
-        document.querySelector('input[type="text"]').parentNode.classList.add("error");
-      }
+    //   if (x === true) {
+    //     const proxyurl = "";
+    //     const url =
+    //       'https://ltv-data-api.herokuapp.com/api/v1/records.json?email=' + email;
+    //     fetch(proxyurl + url)
+    //       .then((response) => response.text())
+    //       .then(function (contents) {
+    //         localStorage.setItem("userObject", contents);
+    //         window.location.href = "result.html";
+    //       })
+    //       .catch((e) => console.log(e));
+    //   } else if (x !== true) {
+    //     document.querySelector('input[type="text"]').parentNode.classList.add("error");
+    //   }
     }
   });
 
-});
+  //loader functionality
+  let main = document.querySelector(".main")
+  let loader = document.querySelector(".loader")
 
-let main = document.querySelector(".main")
-let loader = document.querySelector(".loader")
-
-document.onreadystatechange = function() {
+  document.onreadystatechange = function() {
     if (document.readyState !== "complete") {
       main.style.display = "none";
       loader.style.visibility = "visible";
@@ -81,4 +115,7 @@ document.onreadystatechange = function() {
       loader.style.display = "none";
       main.style.display = "block";
     }
-};
+  };
+
+});
+
